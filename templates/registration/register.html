@@ -1,0 +1,26 @@
+{% extends 'registration/account_base.html' %}
+{% load crispy_forms_filters %}
+{% load crispy_forms_tags %}
+
+{% block content %}
+    <div class="d-flex flex-column align-items-center">
+        <div class="border  rounded-4 my-5 p-5 shadow-lg bg-dark bg-opacity-75 text-light" >
+            <form method="post">
+                {% csrf_token %}
+                {% for field in form %}
+	        	    {% if field.errors %}
+		              <ul class="errors">
+			            {% for error in field.errors %}
+			                <li>{{ error }}</li>
+			            {% endfor %}
+		              </ul>
+		           {% endif %}
+                    <p>{{ field.label_tag }} </p>
+                    <p> {{ field }} </p>
+                {% endfor %}
+                <input type="submit" value="Sign Up" class="btn btn-primary">
+           </form>
+        </div>
+    </div>
+
+{% endblock %}

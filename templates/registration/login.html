@@ -1,0 +1,15 @@
+{% extends 'registration/account_base.html' %}
+{% load crispy_forms_filters %}
+{% load crispy_forms_tags %}
+
+{% block content %}
+    <div class="d-flex flex-column align-items-center ">
+        <div class="p-5 my-5 border rounded-4 bg-dark text-light shadow-lg">
+            <form method="post">
+                {% csrf_token %}
+                {{ form|crispy }}
+                <input type="submit" value="Login" class="btn btn-primary">
+            </form>
+        </div>
+    </div>
+{% endblock %}

@@ -1,0 +1,86 @@
+<section class="mb-5">
+    <div class="card bg-light">
+        <div class="card-body">
+            <!-- Comment form-->
+            {% if form.subject.errors %}
+                <ol>
+                {% for error in form.subject.errors %}
+                    <li> <strong>{{ error|escape }}</strong> </li>
+                {% endfor %}
+                </ol>
+            {% endif %}
+            {%  if request.user.is_authenticated %}
+                <form class="mb-4" method="post" action="{% url 'article_detail' article.id %}" id="form">
+                    {% csrf_token %}
+                    {{ form.as_p }}
+                    <input type="hidden" value="{{ request.path }}" name="next">
+                    <input type="submit" value="post comment" class="btn btn-success">
+                </form>
+            {% else %}
+                <p>for post  comment please  <a href="{% url 'login' %}"  class="text-decoration-none"> login</a>. </p>
+            {% endif %}
+            <!-- Comment with nested comments-->
+           <hr>
+           {% for comment in comments %}
+               <div class="d-flex mb-4">
+                <!-- Parent comment-->
+                <div class="flex-shrink-0"><i class="fa fa-user" aria-hidden="true"></i></div>
+                <div class="ms-3">
+                    <div class="fw-bold" id="comment_username">{{ comment.user.username }}</div>
+                    <p id="comment-body"> {{ comment.body }}</p>
+                    {% if request.user.is_authenticated %}
+                      <i class="fa fa-reply text-info" onclick="myFun({{ comment.id }})"></i>
+                        {% if request.user == comment.user %}
+                             <a href="{% url 'delete-comment' comment.id %}?next={{ request.path|urlencode }}"><i class="fa fa-trash text-danger"></i></a>
+                        {% endif %}
+                    {% endif %}
+                    <form class="mb-4 collapse" method="post"
+                          action="{% url 'article_detail' article.id %}"
+                          id="comment-form-{{ comment.id }}"
+                          style="display: none">
+                        {% csrf_token %}
+                        <input type="hidden" value="{{ comment.id}}" name="comment_id">
+                        {{ form.as_p }}
+                        <input type="submit" value="post reply" class="btn btn-success">
+                    </form>
+                      {% if replies_count > 0 %}
+                          {% for reply in replies %}
+                          {% if  comment.id == reply.parent.id %}
+                            <div class="d-flex mt-4">
+                                <div class="flex-shrink-0"><i class="fa fa-user"></i></div>
+                                <div class="ms-3">
+                                    <div class="fw-bold">{{ reply.user.name }}</div>
+                                     <p>{{ reply.body }}</p>
+                                    {% if request.user.is_authenticated %}
+                                      {% if request.user == reply.user %}
+                                         <a href="{% url 'delete-comment' reply.id %}?next={{ request.path|urlencode }}"><i class="fa fa-trash text-danger"></i></a>
+                                      {% endif %}
+                                   {% endif %}
+
+                                </div>
+                            </div>
+                         {% endif %}
+                          {% endfor %}
+                   {% endif %}
+                </div>
+            </div>
+          {% endfor %}
+        </div>
+    </div>
+</section>
+<script>
+    function myFun(id){
+        let  cfi = 'comment-form-' + id.toString();
+        let  form = document.getElementById(cfi)
+        if (form.style['display'] ==='none')
+        {
+             form.style['display'] = 'block';
+        }
+        else {
+            form.style.display = 'none'
+        }
+
+
+    }
+
+</script>

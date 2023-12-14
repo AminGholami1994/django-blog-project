@@ -1,0 +1,34 @@
+{% extends 'layout/layout.html' %}
+{% block content %}
+
+<div class="col-lg-8">
+    <!-- Post content-->
+    <article>
+        <!-- Post header-->
+        <header class="mb-4">
+            <!-- Post title-->
+            <h1 class="fw-bolder mb-1">{{ article.title}}</h1>
+            <!-- Post meta content-->
+            <div class="text-muted fst-italic mb-2">{{ article.created_at | timesince }}  ago by {{ article.author }}</div>
+            <!-- Post categories-->
+            <a class="badge bg-secondary text-decoration-none link-light" href="#">{{ article.category }}</a>
+        </header>
+        <!-- Preview image figure-->
+        <figure class="mb-4"><img class="img-fluid rounded" src="{{ article.image.url }}" alt="..." /></figure>
+        <!-- Post content-->
+        <section class="mb-5">
+            <p class="fs-5 mb-4 justify" align="justify">{{ article.body | safe}}</p>
+        </section>
+        {% if request.user.is_authenticated and request.user == article.author %}
+            <div class="text-end mb-2 ">
+            <hr>
+                <a href="{% url 'edit_article' article.id %}"><i class="fa fa-edit"></i></a>
+                <a href="{% url 'confirm_delete_article' article.id %}"><i class="fa fa-trash text-danger"></i></a>
+            </div>
+        {% endif %}
+    </article>
+    <!-- Comments section-->
+    {% include 'articles/comment.html' %}
+</div>
+
+{% endblock %}

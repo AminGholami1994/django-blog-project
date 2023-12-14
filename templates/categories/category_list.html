@@ -1,0 +1,35 @@
+{% extends 'layout/layout.html' %}
+{% load humanize  %}
+
+{% block content %}
+    <div class="col-lg-8">
+        <div class="table-responsive-lg">
+            <table class="table table-striped table-hover">
+                <thead class="table-dark">
+                    <tr>
+                        <th scope="col">title</th>
+                        <th scope="col"> number of article</th>
+                        <th scope="col">created at</th>
+                    </tr>
+                </thead>
+                <tbody>
+                {% for category in categories %}
+
+                    <tr>
+
+                        <td>
+                            <a href="{% url 'category-articles' category.id %}" class="text-decoration-none">{{ category.title }} </a>
+                        </td>
+                        <td>{{ category.article_set.count }}</td>
+                        <td>{{ category.created_at| naturalday }}</td>
+                    </tr>
+
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    {% if request.is_authenticated %}
+        <span class="bg-primary  p-2 rounded-2"><a href="{% url 'create_category' %}" class="text-decoration-none text-light">Add New Category</a></span>
+    {% endif %}
+    </div>
+{% endblock %}

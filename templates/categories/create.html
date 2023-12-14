@@ -1,0 +1,14 @@
+{% extends 'layout/layout.html' %}
+{% load crispy_forms_filters %}
+
+{% block content %}
+    <div class="col-lg-8">
+        <div class="my-5">
+            <form method="post">
+                {% csrf_token %}
+                {{ form|crispy }}
+                <input type="submit" value="save" class="btn btn-primary">
+            </form>
+        </div>
+    </div>
+{% endblock %}

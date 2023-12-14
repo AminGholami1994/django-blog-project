@@ -1,0 +1,54 @@
+{% extends 'layout/layout.html' %}
+{% load humanize %}
+{% block content %}
+    <!-- Blog entries-->
+    <div class="col-lg-8">
+                     <!-- Nested row for non-featured blog posts-->
+        <div class="row ">
+            {% for article in articles %}
+                <div class="col-lg-6 d-flex  align-items-stretch">
+                            <!-- Blog post-->
+                    {% if forloop.counter|divisibleby:2 %}
+                        <div class="card mb-4">
+                            <a href="{% url 'article_detail' article.id %}">
+                                <img class="card-img-top" src="{{ article.image.url }}" alt="..." />
+                            </a>
+                            <div class="card-body">
+                                <div class="small text-muted">{{ article.created_at|naturalday }}</div>
+                                <h2 class="card-title h4">{{ article.title }}</h2>
+                                <p class="card-text">{{ article.body|slice:":255" }}</p>
+                                <a class="btn btn-primary" href="{% url "article_detail" article.id %}">Read more →</a>
+                            </div>
+                        </div>
+                    {% else %}
+                        <!-- Blog post-->
+                        <div class="card mb-4">
+                            <a href="{% url "article_detail" article.id %}">
+                                <img class="card-img-top"  src="{{ article.image.url }}" alt="..." />
+                            </a>
+                            <div class="card-body">
+                                <div class="small text-muted">{{ article.created_at|naturalday }}</div>
+                                <h2 class="card-title h4">{{ article.title }}</h2>
+                                <p class="card-text">{{ article.body|slice:":255" }}</p>
+                                <a class="btn btn-primary" href="{% url "article_detail" article.id %}">Read more →</a>
+                                </div>
+                        </div>
+                    {% endif %}
+                </div>
+            {% endfor %}
+            <nav>
+                <ul class="pagination">
+                    {% if articles.has_previous %}
+                        <li class="page-item"><a class="page-link" href="?page=1">first</a></li>
+                        <li class="page-item"><a class="page-link" href="?page={{ articles.previous_page_number }}">{{ articles.previous_page_number }}</a></li>
+                    {% endif %}
+                        <li class="page-item"><a class="page-link active" href="?page={{ articles.number }}">{{ articles.number }}</a></li>
+                    {% if articles.has_next %}
+                        <li class="page-item"><a class="page-link" href="?page={{ articles.next_page_number }}">{{ articles.next_page_number }}</a></li>
+                        <li class="page-item"><a class="page-link" href="?page={{ articles.next_page_number }}">last</a></li>
+                    {% endif %}
+                </ul>
+            </nav>
+       </div>
+    </div>
+{% endblock %}
